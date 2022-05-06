@@ -12,6 +12,7 @@ class Character(pygame.sprite.Sprite):
         self.overlap_pos = self.rect.inflate(0, -30)
 
         self.velocity = 5
+
         self.directionX = 0
         self.directionY = 0
 
@@ -28,9 +29,22 @@ class Character(pygame.sprite.Sprite):
         self.sword = None
         # self.bow = Bow(self.rect.center, [self.all_sprites])
 
+        # stats
+        self.hp = 60
+        self.atk = 5
+        self.money = 100
+
+        self.weapon_index = 0
+
+        # mb also delete
+        self.bar_show = False
+
     def movement(self):
         # move to delay method
         self.delete_sword()
+
+        # probably remove this and show during fight when losing hp
+        self.bar_show = False
 
         keys = pygame.key.get_pressed()
 
@@ -53,14 +67,12 @@ class Character(pygame.sprite.Sprite):
 
         # move to attack
         if pygame.mouse.get_pressed()[0]:
+            self.weapon_index = 0
             self.create_sword()
             # sword
         elif pygame.mouse.get_pressed()[2]:
-            pass
+            self.weapon_index = 1
             # bow
-        elif keys[pygame.K_e]:
-            pass
-            # spell
         elif keys[pygame.K_f]:
             pass
             # talking to npc
@@ -69,6 +81,9 @@ class Character(pygame.sprite.Sprite):
         if keys[pygame.K_ESCAPE]:
             pass
             # menu pops up
+
+        if keys[pygame.K_SPACE]:
+            self.bar_show = True
 
         if self.directionX != 0 and self.directionY != 0:
             self.directionX = round(self.directionX * math.sqrt(2) / 2, 1)

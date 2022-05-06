@@ -2,6 +2,7 @@ import pygame
 from block import Block
 from character import Character
 from camera import SpritesCameraGroup
+from ui import UI
 
 
 class Build:
@@ -16,6 +17,8 @@ class Build:
 
         self.map_build()
 
+        self.ui = UI()
+
     def map_build(self):
         for i in range(15):
             x = i * self.size
@@ -26,4 +29,5 @@ class Build:
     def start(self):
         self.all_sprites.sprite_build(self.player)
         self.all_sprites.update()
+        self.ui.display(self.player)
 
