@@ -22,17 +22,27 @@ class Character(pygame.sprite.Sprite):
         # delete later
         self.status = ""
 
-        # later for bow and mb spell
+        # later for bow
         self.switch_weapon = True
         self.time_switch_weapon = pygame.time.get_ticks()
 
+        self.use_weapon = False
+        self.atk_cd = 500
+        self.atk_time = None
+
         self.sword = None
         # self.bow = Bow(self.rect.center, [self.all_sprites])
+
+        # later for heal potion
+        self.exist_potion = True
+        self.health_restored = 10
 
         # stats
         self.hp = 60
         self.atk = 5
         self.money = 100
+
+        self.max_hp = 100
 
         self.weapon_index = 0
 
@@ -66,16 +76,25 @@ class Character(pygame.sprite.Sprite):
             self.directionY /= 2
 
         # move to attack
-        if pygame.mouse.get_pressed()[0]:
+        if pygame.mouse.get_pressed()[0] and not self.use_weapon:
+            self.use_weapon = True
+            self.atk_time = pygame.time.get_ticks()
             self.weapon_index = 0
             self.create_sword()
             # sword
-        elif pygame.mouse.get_pressed()[2]:
+        elif pygame.mouse.get_pressed()[2] and not self.use_weapon:
+            self.use_weapon = True
+            self.atk_time = pygame.time.get_ticks()
             self.weapon_index = 1
+            self.create_bow()
             # bow
         elif keys[pygame.K_f]:
             pass
             # talking to npc
+
+        # heal potion
+        if keys[pygame.K_e]:
+            self.use_potion()
 
         # move to menu
         if keys[pygame.K_ESCAPE]:
@@ -114,6 +133,20 @@ class Character(pygame.sprite.Sprite):
             self.sword.kill()
         self.sword = None
 
+    def create_bow(self):
+        pass
+
+    def use_potion(self):
+        if self.exist_potion:
+            self.hp = min(self.hp + self.health_restored, self.max_hp)
+            print(self.hp)
+
+    def cooldown(self):
+        current_time = pygame.time.get_ticks()
+        if self.use_weapon:
+            if current_time - self.atk_time >= self.atk_cd:
+                self.use_weapon = False
+
     def collision(self, direction):
         if direction == 'horizontal':
             for sprite in self.object_sprites:
@@ -133,3 +166,4 @@ class Character(pygame.sprite.Sprite):
 
     def update(self):
         self.movement()
+        self.cooldown()

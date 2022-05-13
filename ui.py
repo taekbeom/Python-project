@@ -13,6 +13,7 @@ class UI:
         self.weapon_list = []
         self.weapon_list.append(pygame.image.load('graphics/sword.png').convert_alpha())
         self.weapon_list.append(pygame.image.load('graphics/bow.png').convert_alpha())
+        self.potion = pygame.image.load('graphics/health_potion.png').convert_alpha()
 
     def colourful_bar(self, current_hp):
         pygame.draw.rect(self.display_surf, 'black', self.hp_bar)
@@ -41,8 +42,17 @@ class UI:
         self.display_surf.blit(weapon_surf,weapon_rect)
         pygame.draw.rect(self.display_surf, 'gray', bg_rect, 2)
 
+    def show_potion(self):
+        bg_rect = pygame.Rect(700, 25, 62, 62)
+        potion_surf = self.potion
+        potion_rect = potion_surf.get_rect(center=bg_rect.center)
+        pygame.draw.rect(self.display_surf, 'black', bg_rect)
+        self.display_surf.blit(potion_surf, potion_rect)
+        pygame.draw.rect(self.display_surf, 'gray', bg_rect, 2)
+
     def display(self, player):
         if player.bar_show:
             self.colourful_bar(player.hp)
         self.show_money(player.money)
         self.show_weapon(player.weapon_index)
+        self.show_potion()
