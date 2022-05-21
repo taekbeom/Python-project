@@ -1,6 +1,7 @@
 import pygame
 from sys import exit
 from game import Build
+import settings
 
 
 class GameProcess:
@@ -18,9 +19,6 @@ class GameProcess:
 
         self.test_surf = pygame.image.load('graphics/map.png')
 
-        # self.x = pygame.display.get_surface().get_size()[0] // 2
-        # self.y = pygame.display.get_surface().get_size()[1] // 2
-
         self.build = Build()
 
     def start(self):
@@ -29,6 +27,8 @@ class GameProcess:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
+                if event.type == pygame.MOUSEBUTTONUP:
+                    settings.mouse_button_up = True
 
             self.screen.blit(self.test_surf, (0, 0))
             self.build.start()

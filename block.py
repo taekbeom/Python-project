@@ -7,3 +7,6 @@ class Block(pygame.sprite.Sprite):
         self.image = pygame.image.load('graphics/object.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
         self.overlap_pos = self.rect.inflate(0, -20)
+
+        # for map
+        self.sprite_type = 'block'

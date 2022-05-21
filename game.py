@@ -3,6 +3,8 @@ from block import Block
 from character import Character
 from camera import SpritesCameraGroup
 from ui import UI
+from enemy import Enemy
+from npc import NPC
 
 
 class Build:
@@ -25,9 +27,12 @@ class Build:
             Block(x, 0, [self.all_sprites, self.object_sprites])
         self.player = Character(self.screen.get_size()[0] // 2, self.screen.get_size()[1] // 2,
                                 [self.all_sprites], self.object_sprites, self.all_sprites)
+        Enemy((100, 200), [self.all_sprites], self.object_sprites)
+        NPC((800, 500), [self.all_sprites, self.object_sprites], self.all_sprites)
 
     def start(self):
         self.all_sprites.sprite_build(self.player)
         self.all_sprites.update()
+        self.all_sprites.enemy_update(self.player)
         self.ui.display(self.player)
 

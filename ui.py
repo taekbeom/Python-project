@@ -34,16 +34,30 @@ class UI:
         self.display_surf.blit(text_surf, text_rect)
         pygame.draw.rect(self.display_surf, 'gray', text_rect.inflate(10, 10), 2)
 
-    def show_weapon(self, index):
-        bg_rect = pygame.Rect(800, 25, 62, 62)
+    def show_weapon(self, index, x_pos, y_pos, alpha_lvl):
+        bg_rect = pygame.Rect(x_pos, y_pos, 62, 62)
         weapon_surf = self.weapon_list[index]
         weapon_rect = weapon_surf.get_rect(center=bg_rect.center)
         pygame.draw.rect(self.display_surf, 'black', bg_rect)
-        self.display_surf.blit(weapon_surf,weapon_rect)
+        self.display_surf.blit(weapon_surf, weapon_rect)
+
+        fg_surf = pygame.Surface((62, 62))
+        fg_surf.set_alpha(alpha_lvl)
+        fg_surf.fill('gray')
+        self.display_surf.blit(fg_surf, (x_pos, y_pos))
+
         pygame.draw.rect(self.display_surf, 'gray', bg_rect, 2)
 
+    def choose_weapon(self, index):
+        if index == 0:
+            self.show_weapon(index + 1, 780, 25, 100)
+            self.show_weapon(index, 800, 40, 0)
+        else:
+            self.show_weapon(index - 1, 800, 25, 100)
+            self.show_weapon(index, 780, 40, 0)
+
     def show_potion(self):
-        bg_rect = pygame.Rect(700, 25, 62, 62)
+        bg_rect = pygame.Rect(650, 25, 62, 62)
         potion_surf = self.potion
         potion_rect = potion_surf.get_rect(center=bg_rect.center)
         pygame.draw.rect(self.display_surf, 'black', bg_rect)
@@ -54,5 +68,5 @@ class UI:
         if player.bar_show:
             self.colourful_bar(player.hp)
         self.show_money(player.money)
-        self.show_weapon(player.weapon_index)
+        self.choose_weapon(player.weapon_index)
         self.show_potion()
