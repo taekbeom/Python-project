@@ -38,3 +38,10 @@ class Entity(pygame.sprite.Sprite):
                         self.overlap_pos.bottom = sprite.overlap_pos.top
                     if self.direction_y < 0:
                         self.overlap_pos.top = sprite.overlap_pos.bottom
+
+    def flicker(self):
+        value = math.sin(pygame.time.get_ticks())
+        if value >= 0:
+            return 255
+        else:
+            return  0

@@ -1,21 +1,19 @@
 import pygame
 
+import settings
+
 
 class Weapon(pygame.sprite.Sprite):
     def __init__(self, player_center, groups):
         super().__init__(groups)
-        self.image = pygame.Surface((40, 10))
+        self.image = pygame.Surface((50, 10))
         # self.rect = self.image.get_rect(center=player_center)
 
 
 class Sword(Weapon):
     def __init__(self, player_center, groups):
         super().__init__(player_center, groups)
-
-
-class Bow(Weapon):
-    def __init__(self, player_center, groups):
-        super().__init__(player_center, groups)
+        self.sprite_type = 'sword'
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -30,7 +28,7 @@ class Projectile(pygame.sprite.Sprite):
 
         self.sprite_type = 'projectile'
 
-        self.velocity = 10
+        self.velocity = 15
 
         self.direction_x = 0
         self.direction_y = 0
@@ -45,30 +43,31 @@ class Projectile(pygame.sprite.Sprite):
         self.collide_object = False
 
     def update(self):
-        if self.direction_x != 0:
-            self.collision('horizontal')
-            if not self.collide_object:
-                self.rect.x += self.velocity * self.direction_x
-                self.cooldown(self.fall_cd_x)
-                if self.fall_down:
-                    self.fall_time = pygame.time.get_ticks()
-                    self.rect.y += 1
-                    self.fall_down = False
-                if self.rect.x >= self.position[0] + 400 \
-                        or self.rect.x <= self.position[0] - 400:
-                    self.kill()
-        elif self.direction_y != 0:
-            self.collision('vertical')
-            if not self.collide_object:
-                self.rect.y += self.velocity * self.direction_y
-                self.cooldown(self.fall_cd_y)
-                if self.fall_down:
-                    self.fall_time = pygame.time.get_ticks()
-                    self.velocity -= 1
-                    self.fall_down = False
-                if self.rect.y >= self.position[1] + 300 \
-                        or self.rect.y <= self.position[1] - 300:
-                    self.kill()
+        if not settings.pause_mode:
+            if self.direction_x != 0:
+                self.collision('horizontal')
+                if not self.collide_object:
+                    self.rect.x += self.velocity * self.direction_x
+                    self.cooldown(self.fall_cd_x)
+                    if self.fall_down:
+                        self.fall_time = pygame.time.get_ticks()
+                        self.rect.y += 1
+                        self.fall_down = False
+                    if self.rect.x >= self.position[0] + 400 \
+                            or self.rect.x <= self.position[0] - 400:
+                        self.kill()
+            elif self.direction_y != 0:
+                self.collision('vertical')
+                if not self.collide_object:
+                    self.rect.y += self.velocity * self.direction_y
+                    self.cooldown(self.fall_cd_y)
+                    if self.fall_down:
+                        self.fall_time = pygame.time.get_ticks()
+                        self.velocity -= 1
+                        self.fall_down = False
+                    if self.rect.y >= self.position[1] + 300 \
+                            or self.rect.y <= self.position[1] - 300:
+                        self.kill()
 
     def cooldown(self, cd):
         if not self.fall_down:
