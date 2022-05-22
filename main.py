@@ -9,7 +9,7 @@ class GameProcess:
         pygame.init()
 
         # window settings
-        self.screen = pygame.display.set_mode((960, 640), pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode((960, 640))
         pygame.display.set_caption("Imagine your own name")
         pygame.display.set_icon(pygame.image.load('graphics/ic32.png'))
 
@@ -29,6 +29,11 @@ class GameProcess:
                     exit()
                 if event.type == pygame.MOUSEBUTTONUP:
                     settings.mouse_button_up = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        settings.pause_mode = True
+                    elif event.key == pygame.K_RETURN:
+                        settings.pause_mode = False
 
             self.screen.blit(self.test_surf, (0, 0))
             self.build.start()
