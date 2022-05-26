@@ -10,10 +10,10 @@ from npc import Questobject
 class Character(Entity):
     def __init__(self, x, y, groups, object_sprites, all_sprites, attack_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load('graphics/char_sprite.png').convert_alpha()
+        self.image = pygame.image.load('graphics/char_sprite2.png').convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
 
-        self.overlap_pos = self.rect.inflate(0, -10)
+        self.overlap_pos = self.rect.inflate(-10, -36)
 
         self.object_sprites = object_sprites
         self.all_sprites = all_sprites

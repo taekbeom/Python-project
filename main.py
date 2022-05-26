@@ -17,8 +17,6 @@ class GameProcess:
 
         self.font = pygame.font.Font(None, 50)
 
-        self.test_surf = pygame.image.load('graphics/map.png')
-
         self.build = Build()
 
     def start(self):
@@ -35,7 +33,6 @@ class GameProcess:
                     elif event.key == pygame.K_RETURN:
                         settings.pause_mode = False
 
-            self.screen.blit(self.test_surf, (0, 0))
             self.build.start()
 
             pygame.display.update()

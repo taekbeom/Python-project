@@ -3,6 +3,7 @@ import pygame
 from block import Block
 from character import Character
 from camera import SpritesCameraGroup
+from suppoty import import_csv_layout, import_folder, import_csv_main
 from ui import UI
 from enemy import Enemy
 from npc import NPC, Questobject
@@ -12,7 +13,7 @@ class Build:
     def __init__(self):
         # surface
         self.screen = pygame.display.get_surface()
-        self.size = 64
+        self.size = 16
 
         # sprites group
         self.all_sprites = SpritesCameraGroup()
@@ -27,12 +28,34 @@ class Build:
 
         self.ui = UI(self.quest_sprites)
 
-    def map_build(self):
-        for i in range(15):
-            x = i * self.size
-            Block(x, 0, [self.all_sprites, self.object_sprites])
-        self.player = Character(self.screen.get_size()[0] // 2, self.screen.get_size()[1] // 2,
-                                [self.all_sprites], self.object_sprites, self.all_sprites, self.attack_sprites)
+    def map_build(self, name=None):
+
+        types, pathsCSV, pathsgraphics = import_csv_main('graphics/TileMap/CSV/MAINCSV.csv')
+
+        i = 0
+        for i in range(46):
+            type, pathCSV, pathgraphics = types[i], pathsCSV[i], pathsgraphics[i]
+            layout = import_csv_layout(pathCSV)
+            for row_index, row in enumerate(layout):
+                for col_index, col in enumerate(row):
+                    if col != '-1':
+                        x = col_index * self.size
+                        y = row_index * self.size
+                        if type == 'boundary':
+                            Block((x, y), [self.object_sprites], 'invisible')
+                        else:
+                            surf = import_folder(pathgraphics, col)
+                            Block((x, y), [self.all_sprites, self.object_sprites], type, surf)
+
+        #        Block(x, 0, [self.all_sprites, self.object_sprites])
+
+        # self.player = Character(self.screen.get_size()[0] // 2, self.screen.get_size()[1] // 2,
+        #                         [self.all_sprites], self.object_sprites, self.all_sprites, self.attack_sprites)
+
+        self.player = Character(384, 290, [self.all_sprites], self.object_sprites, self.all_sprites,
+                                self.attack_sprites)
+
+
         Enemy((100, 200), [self.all_sprites, self.can_attack_sprites], self.object_sprites)
         NPC((800, 500), [self.all_sprites, self.object_sprites], self.all_sprites, 'apple1', '', 'npc1')
         NPC((500, 500), [self.all_sprites, self.object_sprites], self.all_sprites, 'apple2', '', 'npc2')
