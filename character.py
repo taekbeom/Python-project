@@ -13,7 +13,10 @@ class Character(Entity):
         self.image = pygame.image.load('graphics/char_sprite2.png').convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
 
-        self.overlap_pos = self.rect.inflate(-10, -36)
+        self.final_rect = pygame.Rect((x + 7, y + 15, 10, 10))
+        self.sprite_type = 'player'
+
+        self.overlap_pos = self.final_rect
 
         self.object_sprites = object_sprites
         self.all_sprites = all_sprites

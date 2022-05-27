@@ -17,6 +17,7 @@ class Enemy(Entity):
         self.image = pygame.Surface((40, 40))
         self.image.set_alpha(0)
         self.rect = self.image.get_rect(center=pos)
+        self.final_rect = self.rect.copy()
         self.position_return = pos
 
         # for movement

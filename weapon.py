@@ -24,6 +24,8 @@ class Projectile(pygame.sprite.Sprite):
         self.position = player_center
         self.rect = self.image.get_rect(center=self.position)
 
+        self.final_rect = self.rect.copy()
+
         self.object_sprites = object_sprites
 
         self.sprite_type = 'projectile'

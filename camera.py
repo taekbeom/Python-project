@@ -23,7 +23,7 @@ class SpritesCameraGroup(pygame.sprite.Group):
         earth_position = self.earth_rect.topleft - self.offset
         self.display_surf.blit(self.earth_surface, earth_position)
 
-        for sprite in sorted(self.sprites(), key=lambda sprite_elem: sprite_elem.rect.centery):
+        for sprite in sorted(self.sprites(), key=lambda sprite_elem: sprite_elem.final_rect.centery):
             position_x = sprite.rect.centerx - self.x_pos
             position_y = sprite.rect.centery - self.y_pos
             position_rect = sprite.image.get_rect(center=(position_x, position_y))

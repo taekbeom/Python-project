@@ -19,7 +19,12 @@ class Entity(pygame.sprite.Sprite):
         self.collision('horizontal')
         self.overlap_pos.y += self.direction_y * entity_velocity
         self.collision('vertical')
-        self.rect = self.overlap_pos
+        if self.sprite_type == 'player':
+            self.rect.centerx = self.overlap_pos.centerx
+            self.rect.centery = self.overlap_pos.centery - 1
+        else:
+            self.rect = self.overlap_pos
+            self.final_rect = self.rect
 
         self.direction_x = 0
         self.direction_y = 0

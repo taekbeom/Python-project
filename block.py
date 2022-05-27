@@ -7,5 +7,5 @@ class Block(pygame.sprite.Sprite):
         self.sprite_type = sprite_type
         self.image = surface
         self.rect = self.image.get_rect(topleft=pos)
-        self.overlap_pos = self.rect.inflate(0, -2)
-
+        self.final_rect = self.rect.copy()
+        self.overlap_pos = self.rect.inflate(0, -7)
