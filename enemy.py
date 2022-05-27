@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 import settings
@@ -25,14 +27,18 @@ class Enemy(Entity):
         # stats
         self.hp = 50
         self.velocity = 2
-        self.atk = 3
+        self.atk = 5
         self.knock_back = 1
         self.fight_rad = 64
 
         # for appearing
-        self.notice_rad = 500
+        self.notice_rad = 400
         self.trigger_rad = 200
         self.visible = False
+
+        # for returning
+        self.return_cd = 5000
+        self.return_time = None
 
         # for interaction
         self.can_attack = True
@@ -46,9 +52,11 @@ class Enemy(Entity):
 
     def animations(self):
         if self.get_attacked:
+            self.bar_show = True
             alpha = self.flicker()
             self.image.set_alpha(alpha)
         elif self.visible:
+            self.bar_show = False
             self.image.set_alpha(255)
 
     def get_player_distance(self, pos_x, pos_y):
@@ -74,7 +82,12 @@ class Enemy(Entity):
 
     def get_player(self, player):
         distance = self.get_player_distance(player.rect.centerx, player.rect.centery)[0]
-        if not self.visible and distance <= self.trigger_rad:
+        distance_from_start = self.get_player_distance(self.position_return[0], self.position_return[1])[0]
+        if distance_from_start >= 400:
+            self.visible = False
+            self.check_location()
+            self.return_time = pygame.time.get_ticks()
+        elif self.rect.center == self.position_return and not self.visible and distance <= self.trigger_rad: # and not self.going home
             self.status = 'appear'
             self.image.set_alpha(255)
             self.visible = True
@@ -84,27 +97,30 @@ class Enemy(Entity):
             elif distance <= self.notice_rad:
                 self.status = 'move'
             else:
-                self.set_invisible()
                 self.visible = False
                 self.status = 'idle'
 
     def action(self, player):
-        if self.status == 'attack':
-            self.damage_player(player)
-            self.atk_time = pygame.time.get_ticks()
-            # move to frame section
-            self.can_attack = False
-            player.chased = True
-        elif self.status == 'move':
-            player.chased = True
-            self.direction_x = self.get_player_distance(player.rect.centerx, player.rect.centery)[1]
-            self.direction_y = self.get_player_distance(player.rect.centerx, player.rect.centery)[2]
+        if self.visible: # and not self.going_home:
+            if self.status == 'attack':
+                self.check_location()
+                self.return_time = pygame.time.get_ticks()
+                self.damage_player(player)
+                self.atk_time = pygame.time.get_ticks()
+                # move to frame section
+                self.can_attack = False
+                player.chased = True
+            elif self.status == 'move':
+                self.check_location()
+                self.return_time = pygame.time.get_ticks()
+                player.chased = True
+                self.direction_x = self.get_player_distance(player.rect.centerx, player.rect.centery)[1]
+                self.direction_y = self.get_player_distance(player.rect.centerx, player.rect.centery)[2]
         else:
-            self.direction_x = 0
-            self.direction_y = 0
+            self.direction_x = self.get_player_distance(self.position_return[0], self.position_return[1])[1]
+            self.direction_y = self.get_player_distance(self.position_return[0], self.position_return[1])[2]
             player.chased = False
-            self.rect.center = self.position_return
-            self.set_invisible()
+            self.check_location()
 
     def cooldown(self):
         current_time = pygame.time.get_ticks()
@@ -124,7 +140,8 @@ class Enemy(Entity):
             if attack_sprite.sprite_type == 'projectile':
                 attack_sprite.kill()
 
-            self.hp = max(self.hp - player.atk, 0)
+            player.full_atk()
+            self.hp = max(self.hp - player.atk_dmg, 0)
 
             self.hit_time = pygame.time.get_ticks()
             self.get_attacked = True
@@ -132,6 +149,8 @@ class Enemy(Entity):
     def check_health(self, player):
         if self.hp <= 0:
             player.chased = False
+            player.exp += random.randint(10, 20)
+            player.potion_count += 1
             self.kill()
 
     def hit_react(self):
@@ -149,6 +168,25 @@ class Enemy(Entity):
         if not self.visible:
             self.image.set_alpha(0)
 
+    def check_location(self):
+        pos_x = self.rect.centerx - self.position_return[0]
+        pos_y = self.rect.centery - self.position_return[1]
+        distance = self.get_player_distance(self.position_return[0], self.position_return[1])[0]
+        # print(pos_x, pos_y, distance)
+        if distance <= 3.0 and not self.visible:
+            self.set_invisible()
+            self.direction_x = 0
+            self.direction_y = 0
+            if self.rect.center != self.position_return:
+                self.rect.center = self.position_return
+        elif not self.visible:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.return_time >= self.return_cd:
+                self.set_invisible()
+                self.rect.center = self.position_return
+                self.direction_x = 0
+                self.direction_y = 0
+
     def update(self):
         if not settings.pause_mode:
             self.hit_react()
@@ -157,6 +195,9 @@ class Enemy(Entity):
             self.cooldown()
 
     def enemy_update(self, player):
+        if self.bar_show:
+            self.show_hp_bar(self.rect.centerx, self.rect.centery, self.hp,
+                             player.rect.centerx, player.rect.centery, 'red')
         self.get_player(player)
         self.action(player)
         self.check_health(player)

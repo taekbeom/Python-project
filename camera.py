@@ -19,7 +19,7 @@ class SpritesCameraGroup(pygame.sprite.Group):
         self.y_pos = player.rect.centery - self.display_surf.get_size()[1] // 2
         self.offset = pygame.math.Vector2(self.x_pos, self.y_pos)
 
-        #drawing the lowest surface
+        # drawing the lowest surface
         earth_position = self.earth_rect.topleft - self.offset
         self.display_surf.blit(self.earth_surface, earth_position)
 

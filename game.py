@@ -57,10 +57,21 @@ class Build:
 
 
         Enemy((100, 200), [self.all_sprites, self.can_attack_sprites], self.object_sprites)
-        NPC((800, 500), [self.all_sprites, self.object_sprites], self.all_sprites, 'apple1', '', 'npc1')
-        NPC((500, 500), [self.all_sprites, self.object_sprites], self.all_sprites, 'apple2', '', 'npc2')
-        Questobject('graphics/apple.png', 'apple1', [self.quest_sprites])
-        Questobject('graphics/apple.png', 'apple2', [self.quest_sprites])
+        NPC((800, 500), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+            'apple', 1, 'string', 'npc5', 0, 'npc1')
+        NPC((500, 500), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+            'string', 3, 'snake', 'npc1', 1, 'npc2')
+        NPC((1000, 700), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+            'melon', 4, 'pen', 'npc4', 2, 'npc3')
+        NPC((1000, 900), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+            'snake', 2, 'melon', 'npc2', 3, 'npc4')
+        NPC((1000, 1000), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+            'pen', 0, 'apple', 'npc3', 4, 'npc5')
+        Questobject('apple', [self.quest_sprites])
+        Questobject('string', [self.quest_sprites])
+        Questobject('melon', [self.quest_sprites])
+        Questobject('snake', [self.quest_sprites])
+        Questobject('pen', [self.quest_sprites])
 
     def player_attack(self):
         if self.attack_sprites:
