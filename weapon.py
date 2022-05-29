@@ -19,7 +19,7 @@ class Sword(Weapon):
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, player_center, object_sprites, groups):
         super().__init__(groups)
-        self.image = pygame.Surface((20, 10))
+        self.image = pygame.image.load('graphics/ItemsAssets/arrow.png')
 
         self.position = player_center
         self.rect = self.image.get_rect(center=self.position)

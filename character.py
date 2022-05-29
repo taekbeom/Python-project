@@ -2,6 +2,7 @@ import pygame
 import math
 
 import settings
+from suppoty import import_folder_animation
 from weapon import Sword, Projectile
 from entity import Entity
 from npc import Questobject
@@ -10,10 +11,10 @@ from npc import Questobject
 class Character(Entity):
     def __init__(self, x, y, groups, object_sprites, all_sprites, attack_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load('graphics/char_sprite2.png').convert_alpha()
+        self.image = pygame.image.load('graphics/CharacterAssets/idledown/2.png').convert_alpha()
         self.rect = self.image.get_rect(center=(x, y))
 
-        self.final_rect = pygame.Rect((x + 7, y + 15, 10, 10))
+        self.final_rect = pygame.Rect((x + 13, y + 19, 10, 10))
         self.sprite_type = 'player'
 
         self.overlap_pos = self.final_rect
@@ -21,9 +22,6 @@ class Character(Entity):
         self.object_sprites = object_sprites
         self.all_sprites = all_sprites
         self.attack_sprites = attack_sprites
-
-        # delete later
-        self.status = ""
 
         # later for bow
         self.can_move = True
@@ -93,6 +91,68 @@ class Character(Entity):
 
         self.killed = False
 
+        self.import_player_assets()
+        self.status = 'down'
+        self.frame_index = 0
+        self.animation_speed = 0.15
+
+    def import_player_assets(self):
+        character_assets_path = "graphics/CharacterAssets/"
+        self.animations = {"up": [], "down": [], "left": [], "right": [],
+                           "idleup": [], "idledown": [], "idleleft": [], "idleright": [],
+                           "runup": [], "rundown": [], "runleft": [], "runright": [],
+                           "attackup": [], "attackdown": [], "attackleft": [], "attackright": [],
+                           'shootup': [], 'shootdown': [], 'shootleft': [], 'shootright': []}
+
+        for animation in self.animations.keys():
+            path = character_assets_path + animation
+            self.animations[animation] = import_folder_animation(path)
+
+    def get_stat(self):
+        if self.direction_x == 0 and self.direction_y == 0:
+            if not "idle" in self.status and not "attack" in self.status and not "shoot" in self.status:
+                self.status = "idle" + self.status
+
+        if self.velocity == 4:
+            if "run" in self.status:
+                self.status = self.status.replace("run", "")
+            if "idle" in self.status:
+                self.status = self.status.replace("idle", "")
+            self.status = "run" + self.status
+        else:
+            if "run" in self.status:
+                self.status = self.status.replace("run", "")
+
+        if self.use_weapon:
+            self.direction_x = 0
+            self.direction_y = 0
+            if self.weapon_index == 0:
+                if not "attack" in self.status:
+                    if "idle" in self.status:
+                        self.status = self.status.replace("idle", "attack")
+                    elif "run" in self.status:
+                        self.status = self.status.replace("run", "attack")
+                    elif "shoot" in self.status:
+                        self.status = self.status.replace("shoot", "")
+                    else:
+                        self.status = "attack" + self.status
+
+            if self.weapon_index == 1:
+                if not "shoot" in self.status:
+                    if "idle" in self.status:
+                        self.status = self.status.replace("idle", "shoot")
+                    elif "run" in self.status:
+                        self.status = self.status.replace("run", "shoot")
+                    elif "attack" in self.status:
+                        self.status = self.status.replace("attack", "")
+                    else:
+                        self.status = "shoot" + self.status
+        else:
+            if "attack" in self.status:
+                self.status = self.status.replace("attack", "")
+            if "shoot" in self.status:
+                self.status = self.status.replace("shoot", "")
+
     def movement(self):
         # probably remove this and show during fight when losing hp
         self.bar_show = False
@@ -116,9 +176,9 @@ class Character(Entity):
         # create statement for not status
 
         if keys[pygame.K_LSHIFT]:
-            self.velocity = 6
-        else:
             self.velocity = 4
+        else:
+            self.velocity = 2
 
         # move to attack
         if pygame.mouse.get_pressed()[0] and not self.use_weapon:
@@ -238,6 +298,30 @@ class Character(Entity):
             elif current_time - self.heal_time <= self.bar_healed_cd:
                 self.bar_show = True
 
+    def animate(self):
+        animation = self.animations[self.status]
+
+        self.frame_index += self.animation_speed
+        if pygame.mouse.get_pressed()[2]:
+            if not self.button_released:
+                if self.frame_index >= len(animation)//2:
+                    self.frame_index = len(animation)//2
+                    print(self.frame_index)
+                    # self.button_released = True
+            else:
+                self.frame_index = (len(animation)//2) - 1
+                if self.frame_index >= len(animation):
+                    self.frame_index = 0
+                    # self.button_released = False
+
+        else:
+            if self.frame_index >= len(animation):
+                self.frame_index = 0
+        # self.frame_index = self.frame_index % len(animation)
+
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center=self.overlap_pos.center)
+
     def check_quest(self):
         if self.get_quest:
             self.quest_list.append(self.get_quest)
@@ -260,8 +344,9 @@ class Character(Entity):
                 self.show_hp_bar(self.rect.centerx, self.rect.centery, self.hp,
                                  self.rect.centerx, self.rect.centery, 'green')
             self.movement()
+            self.get_stat()
+            self.animate()
             self.direction_move(self.velocity)
-            self.animations()
             self.cooldown()
             self.check_health()
             self.check_lvl()
