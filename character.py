@@ -154,7 +154,6 @@ class Character(Entity):
 
     def movement(self):
         # probably remove this and show during fight when losing hp
-        self.bar_show = False
         self.get_item = False
 
         keys = pygame.key.get_pressed()
@@ -233,7 +232,7 @@ class Character(Entity):
                 self.show_quests = False
                 self.can_move = True
 
-    def animations(self):
+    def check_flick(self):
         if self.get_attacked:
             self.bar_show = True
             alpha = self.flicker()
@@ -290,7 +289,6 @@ class Character(Entity):
 
         self.frame_index += self.animation_speed
         if self.use_weapon:
-            print(self.button_released)
             if self.button_released:
                 if self.frame_index >= len(animation) // 2 - 1:
                     self.frame_index = len(animation) // 2 - 1
@@ -330,6 +328,7 @@ class Character(Entity):
                                  self.rect.centerx, self.rect.centery, 'green')
             self.movement()
             self.get_stat()
+            self.check_flick()
             self.animate()
             self.direction_move(self.velocity)
             self.cooldown()

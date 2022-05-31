@@ -40,7 +40,7 @@ class Enemy(Entity):
         self.velocity = 2
         self.atk = 5
         self.knock_back = 1
-        self.fight_rad = 64
+        self.fight_rad = self.rect.width
 
         # for appearing
         self.notice_rad = 400
