@@ -298,6 +298,7 @@ class Character(Entity):
                 if self.frame_index >= len(animation) - 1:
                     self.frame_index = 0
                     self.use_weapon = False
+                    self.delete_sword()
         else:
             if self.frame_index >= len(animation):
                 self.frame_index = 0
