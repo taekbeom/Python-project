@@ -60,15 +60,15 @@ class Build:
             x, y = self.enemy_spawn_points[i]
             Enemy((x, y), [self.all_sprites, self.can_attack_sprites], self.object_sprites)
         NPC((800, 500), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
-            'apple', 1, 'string', 'npc5', 0, 'npc1')
-        NPC((550, 540), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
-            'string', 3, 'snake', 'npc1', 1, 'npc2')
-        NPC((1070, 710), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
-            'melon', 4, 'pen', 'npc4', 2, 'npc3')
-        NPC((1000, 900), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
-            'snake', 2, 'melon', 'npc2', 3, 'npc4')
-        NPC((380, 880), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
-            'pen', 0, 'apple', 'npc3', 4, 'npc5')
+            'apple', 1, 'string', 'shaman', 0, 'random guy')
+        NPC((550, 540), [self.all_sprites, self.object_sprites], 'graphics/ouma.png', self.all_sprites,
+            'string', 3, 'snake', 'random guy', 1, 'ouma')
+        NPC((1070, 710), [self.all_sprites, self.object_sprites], 'graphics/beast.png', self.all_sprites,
+            'melon', 4, 'pen', 'princess', 2, 'beast')
+        NPC((1000, 860), [self.all_sprites, self.object_sprites], 'graphics/princess.png', self.all_sprites,
+            'snake', 2, 'melon', 'ouma', 3, 'princess')
+        NPC((380, 880), [self.all_sprites, self.object_sprites], 'graphics/shaman.png', self.all_sprites,
+            'pen', 0, 'apple', 'beast', 4, 'shaman')
         Questobject('apple', [self.quest_sprites])
         Questobject('string', [self.quest_sprites])
         Questobject('melon', [self.quest_sprites])

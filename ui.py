@@ -82,12 +82,12 @@ class UI:
         self.display_surf.blit(exit_surf, exit_rect)
 
     def show_inventory(self, quest_list):
-        inventory_surf = pygame.Surface((260, 60))
+        inventory_surf = pygame.image.load('graphics/inventory.png')
         inventory_rect = inventory_surf.get_rect(topleft=(350, 560))
         self.display_surf.blit(inventory_surf, inventory_rect)
 
         inventory_case_surf = pygame.Surface((40, 40))
-        inventory_case_surf.fill('gray')
+        inventory_case_surf.fill('#EEDFCC')
 
         x = 360
         for i in range(5):

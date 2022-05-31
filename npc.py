@@ -16,7 +16,7 @@ class NPC(pygame.sprite.Sprite):
         self.quest_target_type = quest_target_type
 
         # dialogue icon
-        emblem_pos = (pos[0], pos[1] - 40)
+        emblem_pos = (pos[0], pos[1] - 28)
         self.emblem = Emblem(emblem_pos, all_sprites)
 
         # for collisions

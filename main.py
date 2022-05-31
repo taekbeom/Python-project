@@ -75,14 +75,14 @@ class GameProcess:
         # draw menu
         self.screen.fill((0, 0, 0))
         if self.selected == 'start':
-            self.screen.blit(pygame.font.Font(None, 50).render('Start', False, (255, 255, 255)), (500, 300))
+            self.screen.blit(pygame.font.Font(None, 50).render('Start', False, (255, 255, 255)), (440, 300))
         else:
-            self.screen.blit(pygame.font.Font(None, 50).render('Exit', False, (100, 100, 100)), (500, 300))
+            self.screen.blit(pygame.font.Font(None, 50).render('Exit', False, (100, 100, 100)), (440, 300))
         pygame.display.update()
 
     def loading_screen(self):
         self.screen.fill((0, 0, 0))
-        self.screen.blit(pygame.font.Font(None, 50).render('Loading...', False, (255, 255, 255)), (500, 300))
+        self.screen.blit(pygame.font.Font(None, 50).render('Loading...', False, (255, 255, 255)), (410, 300))
         pygame.display.update()
 
 

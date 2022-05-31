@@ -60,7 +60,6 @@ class Projectile(pygame.sprite.Sprite):
         if self.direction_y != 0:
             self.collision('vertical')
             if not self.collide_object:
-                print(self.direction_y)
                 self.rect.y += self.velocity * self.direction_y
                 self.cooldown(self.fall_cd_y)
                 if self.fall_down:
