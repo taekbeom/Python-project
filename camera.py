@@ -5,7 +5,7 @@ class SpritesCameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
-        self.display_surf = pygame.display.get_surface()
+        self.display_surface = pygame.display.get_surface()
         self.x_pos = 0
         self.y_pos = 0
         self.offset = pygame.math.Vector2()
@@ -13,21 +13,30 @@ class SpritesCameraGroup(pygame.sprite.Group):
         # creating the lowest surface
         self.earth_surface = pygame.image.load('graphics/TileMap/lowestsurface.png').convert()
         self.earth_rect = self.earth_surface.get_rect(topleft=(0, 0))
+        self.internal_surface = pygame.Surface(self.earth_rect.size)
+        self.internal_surface_vector = pygame.math.Vector2(self.earth_rect.size)
 
     def sprite_build(self, player):
-        self.x_pos = player.rect.centerx - self.display_surf.get_size()[0] // 2
-        self.y_pos = player.rect.centery - self.display_surf.get_size()[1] // 2
         self.offset = pygame.math.Vector2(self.x_pos, self.y_pos)
 
         # drawing the lowest surface
         earth_position = self.earth_rect.topleft - self.offset
-        self.display_surf.blit(self.earth_surface, earth_position)
+        self.internal_surface.blit(self.earth_surface, earth_position)
 
-        for sprite in sorted(self.sprites(), key=lambda sprite_elem: sprite_elem.final_rect.centery):
+        for sprite in sorted(self.sprites(), key=lambda sprite_elem: sprite_elem.rect.centery):
             position_x = sprite.rect.centerx - self.x_pos
             position_y = sprite.rect.centery - self.y_pos
             position_rect = sprite.image.get_rect(center=(position_x, position_y))
-            self.display_surf.blit(sprite.image, position_rect)
+            # Do not render sprites that are not on the screen
+            if not sprite.rect.colliderect(self.display_surface.get_rect()): continue
+            self.internal_surface.blit(sprite.image, position_rect)
+
+        # Crop the internal surface to the display surface
+        cropped_internal_surface = self.internal_surface.subsurface(self.display_surface.get_rect())
+        self.x_pos = player.rect.centerx - cropped_internal_surface.get_size()[0] // 2
+        self.y_pos = player.rect.centery - cropped_internal_surface.get_size()[1] // 2
+        scaled_surf = pygame.transform.scale(cropped_internal_surface, pygame.math.Vector2(cropped_internal_surface.get_size()) * 2.8)
+        self.display_surface.blit(scaled_surf, scaled_surf.get_rect(center=self.display_surface.get_rect().center))
 
     def enemy_update(self, player):
         enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type')
@@ -42,5 +51,5 @@ class SpritesCameraGroup(pygame.sprite.Group):
 
         projectile_sprites = [sprite for sprite in self.sprites() if hasattr(sprite, 'sprite_type')
                               and sprite.sprite_type == 'projectile']
-        for projectile_sprite in projectile_sprites:
-            projectile_sprite.projectile_move_x(player.status)
+        # for projectile_sprite in projectile_sprites:
+            # projectile_sprite.projectile_move_x(player.status)
