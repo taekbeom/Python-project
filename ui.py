@@ -173,12 +173,30 @@ class UI:
         pygame.draw.rect(self.display_surf, 'blue', current_rect)
         pygame.draw.rect(self.display_surf, 'black', current_rect, 3)
 
+    def show_hp(self, player):
+        hp_bar = pygame.Rect(50, 600, 200, 16)
+        pygame.draw.rect(self.display_surf, 'black', hp_bar)
+
+        current_hp = player.hp
+        width = hp_bar.width * current_hp / 100
+        current_rect = hp_bar.copy()
+        current_rect.width = width
+
+        current_hp = str(player.hp) + ' hp'
+        hp_surf = self.font.render(current_hp, False, 'white')
+        hp_rect = hp_surf.get_rect(topleft=(60, 570))
+        self.display_surf.blit(hp_surf, hp_rect)
+
+        pygame.draw.rect(self.display_surf, 'red', current_rect)
+        pygame.draw.rect(self.display_surf, 'black', current_rect, 3)
+
     def display(self, player):
         self.choose_weapon(player.weapon_index)
         self.show_potion(player)
         self.show_inventory(player.quest_list)
         self.show_book()
         self.show_lvl(player.exp, player.lvl)
+        self.show_hp(player)
         if player.npc_status != 'none':
             self.show_dialogue(player)
         if settings.pause_mode:

@@ -227,9 +227,6 @@ class Enemy(Entity):
         self.cooldown()
 
     def enemy_update(self, player):
-        if self.bar_show:
-            self.show_hp_bar(self.rect.centerx, self.rect.centery, self.hp,
-                             player.rect.centerx, player.rect.centery, 'red')
         self.get_player(player)
         self.action(player)
         self.animate()

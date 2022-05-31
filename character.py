@@ -323,9 +323,6 @@ class Character(Entity):
 
     def update(self):
         if not settings.pause_mode:
-            if self.bar_show:
-                self.show_hp_bar(self.rect.centerx, self.rect.centery, self.hp,
-                                 self.rect.centerx, self.rect.centery, 'green')
             self.movement()
             self.get_stat()
             self.check_flick()

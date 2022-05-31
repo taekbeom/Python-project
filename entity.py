@@ -30,16 +30,6 @@ class Entity(pygame.sprite.Sprite):
         self.direction_x = 0
         self.direction_y = 0
 
-    def show_hp_bar(self, self_x, self_y, self_hp, player_x, player_y, color):
-        hp_bar = pygame.Rect(self_x, self_y + 60, 100, 5)
-
-        pygame.draw.rect(self.display_surf, 'black', hp_bar)
-        width = hp_bar.width * (self_hp / 100)
-        current_rect = hp_bar.copy()
-        current_rect.width = width
-
-        pygame.draw.rect(self.display_surf, color, current_rect)
-
     def collision(self, direction):
         if direction == 'horizontal':
             for sprite in self.object_sprites:
