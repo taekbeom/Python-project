@@ -7,20 +7,9 @@ class Sword(pygame.sprite.Sprite):
     def __init__(self, player_center, groups, status):
         super().__init__(groups)
         self.sprite_type = 'sword'
-        direction_x = 0
-        direction_y = 0
-        if 'up' in status:
-            self.image = pygame.Surface((20, 30))
-            direction_y = -1
-        elif 'down' in status:
-            self.image = pygame.Surface((20, 30))
-            direction_y = 1
-        elif 'left' in status:
-            self.image = pygame.Surface((30, 20))
-            direction_x = -1
-        elif 'right' in status:
-            self.image = pygame.Surface((30, 20))
-            direction_x = 1
+        self.image = pygame.Surface((20, 20))
+        direction_y = -1 if 'up' in status else 1
+        direction_x = -1 if 'left' in status else 1
         self.image.set_alpha(0)
         self.rect = self.image.get_rect(center=player_center)
         self.rect.move_ip(direction_x * 15, direction_y * 15)
