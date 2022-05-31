@@ -93,7 +93,7 @@ class Character(Entity):
         self.import_player_assets()
         self.status = 'down'
         self.frame_index = 0
-        self.animation_speed = 0.15
+        self.animation_speed = 0.3
 
     def import_player_assets(self):
         character_assets_path = "graphics/CharacterAssets/"
@@ -285,21 +285,19 @@ class Character(Entity):
                 self.bar_show = True
 
     def animate(self):
+        if self.status not in self.animations: return
         animation = self.animations[self.status]
 
         self.frame_index += self.animation_speed
-        if pygame.mouse.get_pressed()[2]:
-            if not self.button_released:
-                if self.frame_index >= len(animation)//2:
-                    self.frame_index = len(animation)//2
-                    print(self.frame_index)
-                    # self.button_released = True
+        if self.use_weapon:
+            print(self.button_released)
+            if self.button_released:
+                if self.frame_index >= len(animation) // 2 - 1:
+                    self.frame_index = len(animation) // 2 - 1
             else:
-                self.frame_index = (len(animation)//2) - 1
-                if self.frame_index >= len(animation):
+                if self.frame_index >= len(animation) - 1:
                     self.frame_index = 0
-                    # self.button_released = False
-
+                    self.use_weapon = False
         else:
             if self.frame_index >= len(animation):
                 self.frame_index = 0
