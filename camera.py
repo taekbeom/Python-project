@@ -35,7 +35,8 @@ class SpritesCameraGroup(pygame.sprite.Group):
         cropped_internal_surface.blit(self.internal_surface, display_rect, display_rect)
         self.x_pos = player.rect.centerx - cropped_internal_surface.get_size()[0] // 2
         self.y_pos = player.rect.centery - cropped_internal_surface.get_size()[1] // 2
-        scaled_surf = pygame.transform.scale(cropped_internal_surface, pygame.math.Vector2(cropped_internal_surface.get_size()) * 2.8)
+        scaled_surf = pygame.transform.scale(cropped_internal_surface,
+                                             pygame.math.Vector2(cropped_internal_surface.get_size()) * 2.8)
         self.display_surface.blit(scaled_surf, scaled_surf.get_rect(center=self.display_surface.get_rect().center))
 
     def enemy_update(self, player):

@@ -3,7 +3,8 @@ import math
 
 
 class NPC(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, image, all_sprites, quest_type, quest_target, quest_target_type, quest_npc, id, name):
+    def __init__(self, pos, groups, image, all_sprites, quest_type, quest_target, quest_target_type, quest_npc,
+                 id, name):
         super().__init__(groups)
         # display
         self.image = pygame.image.load(image)

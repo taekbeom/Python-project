@@ -98,7 +98,7 @@ class Enemy(Entity):
             self.visible = False
             self.check_location()
             self.return_time = pygame.time.get_ticks()
-        elif self.rect.center == self.position_return and not self.visible and distance <= self.trigger_rad: # and not self.going home
+        elif self.rect.center == self.position_return and not self.visible and distance <= self.trigger_rad:
             self.status = 'appear'
             self.image.set_alpha(255)
             self.visible = True
