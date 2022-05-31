@@ -17,7 +17,7 @@ class GameProcess:
         # window settings
         self.screen = pygame.display.set_mode((960, 640))
         pygame.display.set_caption("Imagine your own name")
-        pygame.display.set_icon(pygame.image.load('graphics/ic32.png'))
+        pygame.display.set_icon(pygame.image.load('graphics/aksumaicon.png'))
 
         self.clock = pygame.time.Clock()
 
