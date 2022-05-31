@@ -4,6 +4,7 @@ import pygame
 
 import settings
 from entity import Entity
+from suppoty import import_folder_animation
 import math
 
 
@@ -14,11 +15,20 @@ class Enemy(Entity):
         self.sprite_type = 'enemy'
 
         # display
-        self.image = pygame.Surface((40, 40))
+        self.image = pygame.Surface((16, 16))
         self.image.set_alpha(0)
         self.rect = self.image.get_rect(center=pos)
         self.final_rect = self.rect.copy()
         self.position_return = pos
+
+        # animation
+        self.animation_keys = {"up": [], "down": [], "left": [], "right": []}
+        character_assets_path = "graphics/EnemyAssets/"
+        for animation in self.animation_keys.keys():
+            path = character_assets_path + animation
+            self.animation_keys[animation] = import_folder_animation(path)
+        self.animation_speed = 0.3
+        self.frame_index = 0
 
         # for movement
         self.overlap_pos = self.rect.inflate(0, -10)
@@ -123,6 +133,25 @@ class Enemy(Entity):
             player.chased = False
             self.check_location()
 
+    def animate(self):
+        status = ''
+        if self.direction_x == 1:
+            status = 'right'
+        elif self.direction_x == -1:
+            status = 'left'
+        elif self.direction_y == 1:
+            status = 'down'
+        elif self.direction_y == -1:
+            status = 'up'
+        if status not in self.animation_keys: return
+        animation = self.animation_keys[status]
+
+        self.frame_index += self.animation_speed
+        self.frame_index %= len(animation)
+
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center=self.overlap_pos.center)
+
     def cooldown(self):
         current_time = pygame.time.get_ticks()
         if not self.can_attack:
@@ -203,4 +232,5 @@ class Enemy(Entity):
                              player.rect.centerx, player.rect.centery, 'red')
         self.get_player(player)
         self.action(player)
+        self.animate()
         self.check_health(player)

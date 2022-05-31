@@ -24,6 +24,8 @@ class Build:
 
         self.quest_sprites = pygame.sprite.Group()
 
+        self.enemy_spawn_points = [[1301, 247], [1215, 415], [1230, 705], [1500, 390], [1650, 766]]
+
         self.map_build()
 
         self.ui = UI(self.quest_sprites)
@@ -54,17 +56,18 @@ class Build:
         self.player = Character(384, 290, [self.all_sprites], self.object_sprites, self.all_sprites,
                                 self.attack_sprites)
 
-
-        Enemy((100, 200), [self.all_sprites, self.can_attack_sprites], self.object_sprites)
+        for i in range(len(self.enemy_spawn_points)):
+            x, y = self.enemy_spawn_points[i]
+            Enemy((x, y), [self.all_sprites, self.can_attack_sprites], self.object_sprites)
         NPC((800, 500), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
             'apple', 1, 'string', 'npc5', 0, 'npc1')
-        NPC((500, 500), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+        NPC((550, 540), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
             'string', 3, 'snake', 'npc1', 1, 'npc2')
-        NPC((1000, 700), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+        NPC((1070, 710), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
             'melon', 4, 'pen', 'npc4', 2, 'npc3')
         NPC((1000, 900), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
             'snake', 2, 'melon', 'npc2', 3, 'npc4')
-        NPC((1000, 1000), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
+        NPC((380, 880), [self.all_sprites, self.object_sprites], 'graphics/pesosus_greenov.png', self.all_sprites,
             'pen', 0, 'apple', 'npc3', 4, 'npc5')
         Questobject('apple', [self.quest_sprites])
         Questobject('string', [self.quest_sprites])
