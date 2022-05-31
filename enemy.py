@@ -160,10 +160,11 @@ class Enemy(Entity):
             self.direction_y *= - self.knock_back
 
     def damage_player(self, player):
-        if not player.get_attacked:
-            player.hp = max(player.hp - self.atk, 0)
-            player.get_attacked = True
-            player.hit_time = pygame.time.get_ticks()
+        if player.get_attacked: return
+
+        player.hp = max(player.hp - self.atk, 0)
+        player.get_attacked = True
+        player.hit_time = pygame.time.get_ticks()
 
     def set_invisible(self):
         if not self.visible:
@@ -189,11 +190,12 @@ class Enemy(Entity):
                 self.direction_y = 0
 
     def update(self):
-        if not settings.pause_mode:
-            self.hit_react()
-            self.direction_move(self.velocity)
-            self.animations()
-            self.cooldown()
+        if settings.pause_mode: return
+
+        self.hit_react()
+        self.direction_move(self.velocity)
+        self.animations()
+        self.cooldown()
 
     def enemy_update(self, player):
         if self.bar_show:

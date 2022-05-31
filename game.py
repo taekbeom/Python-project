@@ -32,7 +32,6 @@ class Build:
 
         types, pathsCSV, pathsgraphics = import_csv_main('graphics/TileMap/CSV/MAINCSV.csv')
 
-        i = 0
         for i in range(46):
             type, pathCSV, pathgraphics = types[i], pathsCSV[i], pathsgraphics[i]
             layout = import_csv_layout(pathCSV)

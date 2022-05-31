@@ -34,7 +34,6 @@ class Character(Entity):
         self.button_released = False
 
         self.sword = None
-        # self.bow = Bow(self.rect.center, [self.all_sprites])
 
         # later for heal potion
         self.potion_count = 10

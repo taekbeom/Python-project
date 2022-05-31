@@ -3,16 +3,9 @@ import pygame
 import settings
 
 
-class Weapon(pygame.sprite.Sprite):
-    def __init__(self, player_center, groups):
+class Sword(pygame.sprite.Sprite):
+    def __init__(self, player_center, groups, status):
         super().__init__(groups)
-        self.image = pygame.Surface((50, 10))
-        # self.rect = self.image.get_rect(center=player_center)
-
-
-class Sword(Weapon):
-    def __init__(self, player_center, groups):
-        super().__init__(player_center, groups)
         self.sprite_type = 'sword'
         direction_x = 0
         direction_y = 0
@@ -55,7 +48,7 @@ class Projectile(pygame.sprite.Sprite):
         self.direction_x, self.direction_y = self.choose_direction(direction)
 
         self.fall_down = True
-        self.fall_time = None
+        self.fall_time = 0
         self.fall_cd_x = 70
         self.fall_cd_y = 250
         self.ttl_cd = 1000

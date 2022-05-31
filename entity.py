@@ -7,7 +7,9 @@ class Entity(pygame.sprite.Sprite):
         super().__init__(groups)
         self.direction_x = 0
         self.direction_y = 0
+
         self.display_surf = pygame.display.get_surface()
+        self._scale_pos()
         self.bar_show = False
 
     def direction_move(self, entity_velocity):
@@ -30,13 +32,10 @@ class Entity(pygame.sprite.Sprite):
         self.direction_y = 0
 
     def show_hp_bar(self, self_x, self_y, self_hp, player_x, player_y, color):
-        hp_bar = pygame.Rect(self_x - player_x + self.display_surf.get_size()[0] // 2 - 25,
-                             self_y - player_y + self.display_surf.get_size()[1] // 2 + 60,
-                             50, 5)
+        hp_bar = pygame.Rect(self_x, self_y + 60, 100, 5)
 
         pygame.draw.rect(self.display_surf, 'black', hp_bar)
-        current_hp = self_hp
-        width = hp_bar.width * current_hp / 100
+        width = hp_bar.width * (self_hp / 100)
         current_rect = hp_bar.copy()
         current_rect.width = width
 
@@ -64,4 +63,8 @@ class Entity(pygame.sprite.Sprite):
         if value >= 0:
             return 255
         else:
-            return  0
+            return 0
+
+    def _scale_pos(self):
+        scaled_surf = pygame.transform.scale(self.display_surf, pygame.math.Vector2(self.display_surf.get_size())*2.8)
+        self.display_surf.blit(scaled_surf, scaled_surf.get_rect(center=self.display_surf.get_rect().center))
