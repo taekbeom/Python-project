@@ -24,6 +24,7 @@ class Sword(pygame.sprite.Sprite):
         self.image.set_alpha(0)
         self.rect = self.image.get_rect(center=player_center)
         self.rect.move_ip(direction_x * 15, direction_y * 15)
+        self.overlap_pos = self.rect.copy()
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -34,7 +35,7 @@ class Projectile(pygame.sprite.Sprite):
         self.position = player_center
         self.rect = self.image.get_rect(center=self.position)
 
-        self.final_rect = self.rect.copy()
+        self.overlap_pos = self.rect.copy()
 
         self.object_sprites = object_sprites
 
