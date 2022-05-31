@@ -14,10 +14,30 @@ class Sword(Weapon):
     def __init__(self, player_center, groups):
         super().__init__(player_center, groups)
         self.sprite_type = 'sword'
+        direction_x = 0
+        direction_y = 0
+        if 'up' in status:
+            # self.image = pygame.image.load('graphics/sword_up.png')
+            self.image = pygame.Surface((20, 30))
+            direction_y = -1
+        elif 'down' in status:
+            # self.image = pygame.image.load('graphics/sword_down.png')
+            self.image = pygame.Surface((20, 30))
+            direction_y = 1
+        elif 'left' in status:
+            # self.image = pygame.image.load('graphics/sword_left.png')
+            self.image = pygame.Surface((30, 20))
+            direction_x = -1
+        elif 'right' in status:
+            # self.image = pygame.image.load('graphics/sword_right.png')
+            self.image = pygame.Surface((30, 20))
+            direction_x = 1
+        self.rect = self.image.get_rect(center=player_center)
+        self.rect.move_ip(direction_x * 15, direction_y * 15)
 
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, player_center, object_sprites, groups):
+    def __init__(self, player_center, object_sprites, groups, direction):
         super().__init__(groups)
         self.image = pygame.image.load('graphics/ItemsAssets/arrow.png')
 
@@ -32,9 +52,7 @@ class Projectile(pygame.sprite.Sprite):
 
         self.velocity = 15
 
-        self.direction_x = 0
-        self.direction_y = 0
-        self.direction_get = False
+        self.direction_x, self.direction_y = self.choose_direction(direction)
 
         self.fall_down = True
         self.fall_time = None
@@ -45,31 +63,33 @@ class Projectile(pygame.sprite.Sprite):
         self.collide_object = False
 
     def update(self):
-        if not settings.pause_mode:
-            if self.direction_x != 0:
-                self.collision('horizontal')
-                if not self.collide_object:
-                    self.rect.x += self.velocity * self.direction_x
-                    self.cooldown(self.fall_cd_x)
-                    if self.fall_down:
-                        self.fall_time = pygame.time.get_ticks()
-                        self.rect.y += 1
-                        self.fall_down = False
-                    if self.rect.x >= self.position[0] + 400 \
-                            or self.rect.x <= self.position[0] - 400:
-                        self.kill()
-            elif self.direction_y != 0:
-                self.collision('vertical')
-                if not self.collide_object:
-                    self.rect.y += self.velocity * self.direction_y
-                    self.cooldown(self.fall_cd_y)
-                    if self.fall_down:
-                        self.fall_time = pygame.time.get_ticks()
-                        self.velocity -= 1
-                        self.fall_down = False
-                    if self.rect.y >= self.position[1] + 300 \
-                            or self.rect.y <= self.position[1] - 300:
-                        self.kill()
+        if settings.pause_mode: return
+
+        if self.direction_x != 0:
+            self.collision('horizontal')
+            if not self.collide_object:
+                self.rect.x += self.velocity * self.direction_x
+                self.cooldown(self.fall_cd_x)
+                if self.fall_down:
+                    self.fall_time = pygame.time.get_ticks()
+                    self.rect.y += 1
+                    self.fall_down = False
+                if self.rect.x >= self.position[0] + 400 \
+                        or self.rect.x <= self.position[0] - 400:
+                    self.kill()
+        if self.direction_y != 0:
+            self.collision('vertical')
+            if not self.collide_object:
+                print(self.direction_y)
+                self.rect.y += self.velocity * self.direction_y
+                self.cooldown(self.fall_cd_y)
+                if self.fall_down:
+                    self.fall_time = pygame.time.get_ticks()
+                    self.rect.y += 1
+                    self.fall_down = False
+                if self.rect.y >= self.position[1] + 300 \
+                        or self.rect.y <= self.position[1] - 300:
+                    self.kill()
 
     def cooldown(self, cd):
         if not self.fall_down:
@@ -82,17 +102,20 @@ class Projectile(pygame.sprite.Sprite):
         if current_time - self.fall_time >= self.ttl_cd:
             self.kill()
 
-    def projectile_move_x(self, status):
-        if not self.direction_get:
-            if status == "right":
-                self.direction_x = 1
-            elif status == "left":
-                self.direction_x = -1
-            elif status == "down":
-                self.direction_y = 1
-            else:
-                self.direction_y = -1
-            self.direction_get = True
+    def choose_direction(self, status):
+        direction_x = direction_y = 0
+        if 'right' in status:
+            direction_x = 1
+        elif 'left' in status:
+            direction_x = -1
+            self.image = pygame.transform.rotate(self.image, 180)
+        if 'down' in status:
+            direction_y = 1
+            self.image = pygame.transform.rotate(self.image, -90)
+        elif 'up' in status:
+            direction_y = -1
+            self.image = pygame.transform.rotate(self.image, 90)
+        return direction_x, direction_y
 
     def collision(self, direction):
         self.ttl_time = pygame.time.get_ticks()

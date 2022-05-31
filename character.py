@@ -250,20 +250,7 @@ class Character(Entity):
         self.atk_dmg = attack + self.atk
 
     def create_sword(self):
-        self.sword = Sword(self.rect.center, [self.all_sprites, self.attack_sprites])
-        if self.status == "right":
-            self.sword.image = pygame.Surface((50, 10))
-            self.sword.rect = self.sword.image.get_rect(midleft=self.rect.midright)
-        elif self.status == "left":
-            self.sword.image = pygame.Surface((50, 10))
-            self.sword.rect = self.sword.image.get_rect(midright=self.rect.midleft)
-        elif self.status == "down":
-            self.sword.image = pygame.Surface((10, 50))
-            self.sword.rect = self.sword.image.get_rect(midtop=self.rect.midbottom)
-        else:
-            self.sword.image = pygame.Surface((10, 50))
-            self.sword.rect = self.sword.image.get_rect(midbottom=self.rect.midtop)
-        self.sword.final_rect = self.rect.copy()
+        self.sword = Sword(self.rect.center, [self.all_sprites, self.attack_sprites], self.status)
 
     def delete_sword(self):
         if self.sword:
@@ -272,7 +259,7 @@ class Character(Entity):
         self.sword = None
 
     def create_arrow(self):
-        Projectile(self.rect.center, self.object_sprites, [self.all_sprites, self.attack_sprites])
+        Projectile(self.rect.center, self.object_sprites, [self.all_sprites, self.attack_sprites], self.status)
 
     def use_potion(self):
         if self.potion_count and self.can_use_potion:
