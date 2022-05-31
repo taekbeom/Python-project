@@ -27,12 +27,12 @@ class SpritesCameraGroup(pygame.sprite.Group):
             position_x = sprite.rect.centerx - self.x_pos
             position_y = sprite.rect.centery - self.y_pos
             position_rect = sprite.image.get_rect(center=(position_x, position_y))
-            # Do not render sprites that are not on the screen
-            if not sprite.rect.colliderect(self.display_surface.get_rect()): continue
             self.internal_surface.blit(sprite.image, position_rect)
 
         # Crop the internal surface to the display surface
-        cropped_internal_surface = self.internal_surface.subsurface(self.display_surface.get_rect())
+        display_rect = self.display_surface.get_rect()
+        cropped_internal_surface = self.display_surface.copy()
+        cropped_internal_surface.blit(self.internal_surface, display_rect, display_rect)
         self.x_pos = player.rect.centerx - cropped_internal_surface.get_size()[0] // 2
         self.y_pos = player.rect.centery - cropped_internal_surface.get_size()[1] // 2
         scaled_surf = pygame.transform.scale(cropped_internal_surface, pygame.math.Vector2(cropped_internal_surface.get_size()) * 2.8)
